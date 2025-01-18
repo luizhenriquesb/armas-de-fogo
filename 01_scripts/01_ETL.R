@@ -23,6 +23,8 @@ p04714 <- read_sav("00_dados/04714.zip") |> clean_names()
 p04715 <- read_sav("00_dados/04715.zip") |> clean_names()
 p04716 <- read_sav("00_dados/04716.zip") |> clean_names()
 p04745 <- read_sav("00_dados/04745.zip") |> clean_names()
+p04843 <- read_sav("00_dados/04843.zip") |> clean_names()
+lapop2019 <- read_dta("00_dados/Brazil LAPOP AmericasBarometer 2019 v1.0_W.dta") |> clean_names()
 
 # 3. Seleção das colunas --------------------------------------------------
 
@@ -31,10 +33,12 @@ p01601 <- p01601 |>
   mutate(
     id_pesquisa = "01601",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "AVALIAÇÃO PRESIDENTE FERNANDO HENRIQUE - 
     INTENÇÃO DE VOTO PARA PRESIDENTE - 
     CRISE NA SEGURANÇA PÚBLICA",
-    data = "02-2002",
+    data_inicio = "02-2002",
+    data_fim = "02-2002",
     tam_amostra = 3857,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -45,6 +49,7 @@ p02528 <- p02528 |>
   mutate(
     id_pesquisa = "02528",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "
     AVALIAÇÃO DO PRESIDENTE LULA - 
     REFERENDO ARMAS DE FOGO - 
@@ -54,7 +59,8 @@ p02528 <- p02528 |>
     AVALIAÇÃO DOS SENADORES E DEPUTADOS FEDERAIS –
     CONGRESSO - 
     PROGRAMAS SOCIAIS DO GOVERNO LULA",
-    data = "10-2005",
+    data_inicio = "10-2005",
+    data_fim = "10-2005",
     tam_amostra = 2537,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -65,8 +71,10 @@ p03372 <- p03372 |>
   mutate(
     id_pesquisa = "03372",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "AVALIAÇÃO DA PRESIDENTE DILMA APÓS DOIS ANOS DE GOVERNO",
-    data = "12-2012",
+    data_inicio = "12-2012",
+    data_fim = "12-2012",
     tam_amostra = 2588,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -77,8 +85,10 @@ p03836 <- p03836 |>
   mutate(
     id_pesquisa = "03836",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "INTENÇÃO DE VOTO PARA PRESIDENTE AVALIAÇÃO DA PRESIDENTE DILMA",
-    data = "9-2014",
+    data_inicio = "09-2014",
+    data_fim = "09-2014",
     tam_amostra = 10054,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -89,8 +99,10 @@ p03925 <- p03925 |>
   mutate(
     id_pesquisa = "03925",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "AVALIAÇÃO DA PRESIDENTE DILMA",
-    data = "10-2013",
+    data_inicio = "10-2013",
+    data_fim = "10-2013",
     tam_amostra = 2517,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -101,8 +113,10 @@ p03926 <- p03926 |>
   mutate(
     id_pesquisa = "03926",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "AVALIAÇÃO DA PRESIDENTE DILMA",
-    data = "11-2013",
+    data_inicio = "11-2013",
+    data_fim = "11-2013",
     tam_amostra = 4557,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -113,8 +127,10 @@ p04405 <- p04405 |>
   mutate(
     id_pesquisa = "04405",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "INTENÇÃO DE VOTO PARA PRESIDENTE/AVALIAÇÃO DO PRESIDENTE TEMER - 1 ANO E 6 MESES",
-    data = "11-2017",
+    data_inicio = "11-2017",
+    data_fim = "11-2017",
     tam_amostra = 2761,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -125,8 +141,10 @@ p04422 <- p04422 |>
   mutate(
     id_pesquisa = "04422",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "INTENÇÃO DE VOTO PARA PRESIDENTE/AVALIAÇÃO DO PRESIDENTE TEMER - 1 ANO E 1 MÊS",
-    data = "06-2017",
+    data_inicio = "06-2017",
+    data_fim = "06-2017",
     tam_amostra = 2771,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -137,8 +155,10 @@ p04572 <- p04572 |>
   mutate(
     id_pesquisa = "04572",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "INTENÇÃO DE VOTO PARA PRESIDENTE",
-    data = "08-2018",
+    data_inicio = "08-2018",
+    data_fim = "08-2018",
     tam_amostra = 8433,
     universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
@@ -149,8 +169,10 @@ p04696 <- p04696 |>
   mutate(
     id_pesquisa = "04696",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "INTENÇÃO DE VOTO PARA PRESIDENTE - 2º TURNO",
-    data = "10-2018",
+    data_inicio = "10-2018",
+    data_fim = "10-2018",
     tam_amostra = 9173,
     universo = "População adulta do Brasil",
     local= "Brasil"
@@ -161,8 +183,10 @@ p04714 <- p04714 |>
   mutate(
     id_pesquisa = "04714",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "Expectativa do governo Bolsonaro",
-    data = "12-2018",
+    data_inicio = "12-2018",
+    data_fim = "12-2018",
     tam_amostra = 2077,
     universo = "População acima de 16 anos",
     local= "Brasil"
@@ -173,8 +197,10 @@ p04715 <- p04715 |>
   mutate(
     id_pesquisa = "04715",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "AVALIAÇÃO DO PRESIDENTE JAIR BOLSONARO 100 DIAS",
-    data = "04-2019",
+    data_inicio = "04-2019",
+    data_fim = "04-2019",
     tam_amostra = 2086,
     universo = "População acima de 16 anos",
     local= "Brasil"
@@ -185,8 +211,10 @@ p04716 <- p04716 |>
   mutate(
     id_pesquisa = "04716",
     instituto = "Data Folha",
+    tipo = NA_character_,
     nome_pesquisa = "AVALIAÇÃO DO PRESIDENTE JAIR BOLSONARO 6 MESES",
-    data = "06-2019",
+    data_inicio = "06-2019",
+    data_fim = "06-2019",
     tam_amostra = 2086,
     universo = "População acima de 16 anos",
     local= "Brasil"
@@ -197,14 +225,44 @@ p04745 <- p04745 |>
   mutate(
     id_pesquisa = "04745",
     instituto = "IPEC",
+    tipo = NA_character_,
     nome_pesquisa = "
     AVALIAÇÃO DO GOVERNO JAIR BOLSONARO -
     ARMA DE FOGO NO BRASIL -
     AUXILIO EMERGENCIAL -
     PANDEMIA DO CORONAVIRUS",
-    data = "02-2021",
+    data_inicio = "02-2021",
+    data_fim = "02-2021",
     tam_amostra = 2002,
     universo = "População acima de 16 anos",
+    local= "Brasil"
+  )
+
+p04843 <- p04843 |> 
+  select(p901a) |>
+  mutate(
+    id_pesquisa = "04843",
+    instituto = "Data Folha",
+    tipo = NA_character_,
+    nome_pesquisa = "PERFIL IDEOLÓGICO",
+    data_inicio = "06-2023",
+    data_fim = "06-2023",
+    tam_amostra = 2010,
+    universo = "Eleitores de 16 anos ou mais",
+    local= "Brasil"
+  )
+
+lapop2019 <- lapop2019 |> 
+  select(arm2) |>
+  mutate(
+    id_pesquisa = "Lapop-2019",
+    instituto = "IBOPE",
+    tipo = "face-to-face interviews",
+    nome_pesquisa = "AmericasBarometer 2018/19: Brazil",
+    data_inicio = "29-01-2019",
+    data_fim = "03-03-2019",
+    tam_amostra = 2010,
+    universo = "Eleitores de 16 anos ou mais",
     local= "Brasil"
   )
 
@@ -215,6 +273,8 @@ dfs <- mget(ls())
 
 # Consolida os dfs
 consolidada <- bind_rows(dfs)
+# Nota: ao consolidar, um conflito de labels é identificado (rotulos diferentes
+# em uma mesma label). Mas isso não será problema para os nossos propósitos
 
 # Cria o vetor de IDs únicos
 vetor_ids <- consolidada |> 
@@ -328,11 +388,19 @@ final <- final |>
     )
   )
 
+# Vamos ver como ficou
+final |> 
+  distinct(data)
+
 writexl::write_xlsx(
   x = final,
   path = "02_outputs/pesquisas-infos.xlsx"
 )
 
+write_csv(
+  x = final,
+  file = "02_outputs/pesquisas-infos.csv"
+)
 
 # 5. Controle de qualidade ------------------------------------------------
 
