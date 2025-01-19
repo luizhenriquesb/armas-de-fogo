@@ -1,4 +1,6 @@
 
+rm(list = ls())
+
 # 1. Pacotes --------------------------------------------------------------
 
 library(tidyverse)
@@ -24,7 +26,9 @@ p04715 <- read_sav("00_dados/04715.zip") |> clean_names()
 p04716 <- read_sav("00_dados/04716.zip") |> clean_names()
 p04745 <- read_sav("00_dados/04745.zip") |> clean_names()
 p04843 <- read_sav("00_dados/04843.zip") |> clean_names()
-lapop2019 <- read_dta("00_dados/Brazil LAPOP AmericasBarometer 2019 v1.0_W.dta") |> clean_names()
+lapop2019 <- read_dta("00_dados/lapop2018_2019/Brazil LAPOP AmericasBarometer 2019 v1.0_W.dta") |> clean_names()
+lapop2012 <- read_dta("00_dados/lapop_2012/54861031Brazil LAPOP AmericasBarometer 2012 Rev1_W.dta") |> clean_names()
+lat_barometro2011 <- read_dta("00_dados/F00004339-Latinobarometro_2011_dta/Latinobarometro_2011_esp.dta") |> clean_names()
 
 # 3. Seleção das colunas --------------------------------------------------
 
@@ -266,6 +270,34 @@ lapop2019 <- lapop2019 |>
     local= "Brasil"
   )
 
+lapop2012 <- lapop2012 |> 
+    select(arm1, arm2) |>
+    mutate(
+      id_pesquisa = "Lapop-2012",
+      instituto = "Vox Populi",
+      tipo = "face-to-face interviews",
+      nome_pesquisa = "AmericasBarometer 2012: Brazil",
+      data_inicio = "01-03-2012",
+      data_fim = "18-04-2012",
+      tam_amostra = 1500,
+      universo = "Eleitores de 16 anos ou mais",
+      local= "Brasil"
+    )
+
+lat_barometro2011 <- lat_barometro2011 |> 
+    select(p82n) |>
+    mutate(
+      id_pesquisa = "Latino Barómetro-2011",
+      instituto = "IBOPE Inteligencia Brasil",
+      tipo = "face-to-face interviews",
+      nome_pesquisa = "Latino Barómetro-2011",
+      data_inicio = "04-09-2011",
+      data_fim = "06-10-2011",
+      tam_amostra = 1204,
+      universo = "Eleitores de 16 anos ou mais",
+      local= "Brasil"
+    )
+
 # 4. Consolidação ---------------------------------------------------------
 
 # Pega todos os dfs
@@ -286,21 +318,21 @@ lista <- list()
 
 # Itera sobre cada ID no vetor
 for (id in vetor_ids) {
-  # Filtra, seleciona, muta e transforma o data frame
+  # Filtra, seleciona  e transforma o data frame
   df <- consolidada |> 
     filter(id_pesquisa == id) |> 
     select(where(~ !all(is.na(.)))) |> 
     mutate(
       across(
         .cols = -c(
-          id_pesquisa, instituto, nome_pesquisa, data, tam_amostra, universo, local
+          id_pesquisa, instituto, nome_pesquisa, data_inicio, data_fim, tam_amostra, universo, local
         ),
         .fns = ~ attr(., "label")
       )
     ) |> 
     distinct_all() |> 
     pivot_longer(
-      cols = -c(id_pesquisa, instituto, nome_pesquisa, data, tam_amostra, universo, local),
+      cols = -c(id_pesquisa, instituto, nome_pesquisa, data_inicio, data_fim, tam_amostra, universo, local),
       names_to = "cod_pergunta",
       values_to = "pergunta"
     )
@@ -312,29 +344,15 @@ for (id in vetor_ids) {
 # Consolida tudo de novo
 lista_total <- bind_rows(lista)
 
-# consolidada2 <- consolidada |> 
-#   mutate(
-#     across(
-#       .cols = -c(id_pesquisa, instituto, nome_pesquisa, data, tam_amostra, universo, local),
-#       .fns = as_factor
-#     )
-#   ) |> 
-#   pivot_longer(
-#     cols = -c(id_pesquisa, instituto, nome_pesquisa, data, tam_amostra, universo, local),
-#     names_to = "cod_pergunta",
-#     values_to = "alternativas"
-#   ) |> 
-#   distinct_all()
-
 consolidada2 <- consolidada |> 
   mutate(
     across(
-      .cols = -c(id_pesquisa, instituto, nome_pesquisa, data, tam_amostra, universo, local),
+      .cols = -c(id_pesquisa, instituto, nome_pesquisa, data_inicio, data_fim, tam_amostra, universo, local),
       .fns = as_factor
     )
   ) |> 
   pivot_longer(
-    cols = -c(id_pesquisa, instituto, nome_pesquisa, data, tam_amostra, universo, local),
+    cols = -c(id_pesquisa, instituto, nome_pesquisa, data_inicio, data_fim, tam_amostra, universo, local),
     names_to = "cod_pergunta",
     values_to = "alternativas"
   ) |> 
@@ -342,14 +360,14 @@ consolidada2 <- consolidada |>
     id_pesquisa, 
     instituto, 
     nome_pesquisa, 
-    data, 
+    data_inicio, 
+    data_fim, 
     tam_amostra, 
     universo, 
     local, 
     cod_pergunta, alternativas
   )
   
-
 final <- left_join(
   x = lista_total,
   y = consolidada2,
@@ -357,7 +375,8 @@ final <- left_join(
     "id_pesquisa",
     "instituto",
     "nome_pesquisa",
-    "data",
+    "data_inicio", 
+    "data_fim",
     "tam_amostra",
     "universo",
     "local",
@@ -390,17 +409,12 @@ final <- final |>
 
 # Vamos ver como ficou
 final |> 
-  distinct(data)
-
-writexl::write_xlsx(
-  x = final,
-  path = "02_outputs/pesquisas-infos.xlsx"
-)
-
-write_csv(
-  x = final,
-  file = "02_outputs/pesquisas-infos.csv"
-)
+  mutate(
+    ano = str_sub(data_inicio, -4),
+    mes = str_sub(data_inicio, -7, -6)
+  ) |> 
+  distinct(instituto, nome_pesquisa, ano, mes) |> 
+  arrange(ano, mes)
 
 # 5. Controle de qualidade ------------------------------------------------
 
@@ -430,3 +444,15 @@ get(paste0("p", id_pesquisa_aleatorio)) |>
   filter(id_pesquisa == id_pesquisa_aleatorio) |> 
   count(get(cod_pergunta_aleatorio)) |> 
   arrange(n)
+
+# 5. Exportação -----------------------------------------------------------
+
+writexl::write_xlsx(
+  x = final,
+  path = "02_outputs/pesquisas-infos.xlsx"
+)
+
+write_csv(
+  x = final,
+  file = "02_outputs/pesquisas-infos.csv"
+)
